@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { app } from './app';
+import { PostDeletedListener } from './events/listeners/post-deleted-listener';
 import { natsWrapper } from './nats-wrapper';
 
 const startInstance = async () => {
@@ -23,7 +24,8 @@ const startInstance = async () => {
       natsWrapper.client.close();
     });
     process.on('SIGTERM', () => natsWrapper.client.close());
-    // post deleted listener
+
+    new PostDeletedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('connected to database');

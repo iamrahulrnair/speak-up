@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
-import { validateRequest, NotFoundError } from '@suup/common';
+import { validateRequest, NotFoundError, requireAuth } from '@suup/common';
 import mongoose from 'mongoose';
 
 import { Review } from '../models/review';
@@ -11,7 +11,7 @@ import { natsWrapper } from '../nats-wrapper';
 const router = express.Router();
 
 router.patch(
-  `${REVIEW_URL}/:reviewId`,
+  `${REVIEW_URL}/:reviewId`,requireAuth,
   [
     param('id')
       .custom((value) => {

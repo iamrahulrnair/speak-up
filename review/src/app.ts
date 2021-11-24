@@ -1,6 +1,7 @@
-import { NotFoundError, errorHandler } from '@suup/common';
+import { NotFoundError, errorHandler, currentUser } from '@suup/common';
 import express from 'express';
 import 'express-async-errors';
+import cookieSession from 'cookie-session';
 
 import { getAllReviewRouter } from './routes';
 import { updateReviewRouter } from './routes/update';
@@ -10,6 +11,16 @@ import { createReviewRouter } from './routes/new';
 const app = express();
 app.set('trust proxy', true);
 app.use(express.json());
+
+app.use(
+  cookieSession({
+    name: '_a',
+    secure: process.env.NODE_ENV != 'test',
+    signed: false,
+  })
+);
+
+app.use(currentUser);
 
 app.use(getAllReviewRouter);
 app.use(updateReviewRouter);

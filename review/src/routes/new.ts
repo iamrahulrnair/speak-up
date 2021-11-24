@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { validateRequest } from '@suup/common';
+import { requireAuth, validateRequest } from '@suup/common';
 
 import { Review } from '../models/review';
 import { REVIEW_URL } from '../common/variable';
@@ -14,6 +14,7 @@ const router = express.Router();
 
 router.post(
   REVIEW_URL,
+  requireAuth,
   [
     body('userId')
       .notEmpty()
@@ -29,9 +30,9 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { userId, postId, title, description, rating } = req.body;
+    const { postId, title, description, rating } = req.body;
     const review = await Review.build({
-      userId,
+      userId: req.currentUser!.id,
       postId,
       title,
       description,

@@ -1,4 +1,4 @@
-import { NotFoundError, validateRequest } from '@suup/common';
+import { NotFoundError, validateRequest, requireAuth } from '@suup/common';
 import mongoose from 'mongoose';
 import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
@@ -19,7 +19,10 @@ router.delete(
   async (req: Request, res: Response) => {
     const { reviewId } = req.params;
     try {
-      const review = await Review.findByIdAndDelete(reviewId);
+      const review = await Review.findOneAndDelete({
+        reviewId,
+        userId: req.currentUser!.id,
+      });
       //   @TODO: event publisher
       if (!review) throw new NotFoundError();
 
