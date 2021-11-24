@@ -1,0 +1,34 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review
+  template:
+    metadata:
+      labels:
+        app: review
+    spec:
+      containers:
+        - name: review
+          image: iamrahulrnair/review
+            - name: MONGO_URI
+              value: 'mongodb://review-mongo-srv:27017/reviews'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-srv
+spec:
+  selector:
+    app: review
+  type: ClusterIP
+  ports:
+    - name: review
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
