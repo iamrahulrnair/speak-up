@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
 import mongoose from 'mongoose';
 
-import { validateRequest, NotFoundError } from '@suup/common';
+import { validateRequest, NotFoundError, requireAuth, requireAdminAccess } from '@suup/common';
 import { POST_URL } from '../common/variable';
 import { Post } from '../models/post';
 
@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.patch(
   `${POST_URL}/:postId`,
+  requireAuth,requireAdminAccess,
   param('postId')
     .custom((value) => {
       return mongoose.Types.ObjectId.isValid(value);

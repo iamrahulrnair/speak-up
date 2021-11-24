@@ -1,15 +1,17 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { NotFoundError, validateRequest } from '@suup/common';
+import { NotFoundError, requireAuth, validateRequest } from '@suup/common';
 
 import { Review } from '../models/review';
 import { LIKE_URL } from '../common/variable';
 import { Like } from '../models/likes';
+
 const router = express.Router();
 
 router.post(
   LIKE_URL,
+  requireAuth,
   [
     body('userId')
       .notEmpty()

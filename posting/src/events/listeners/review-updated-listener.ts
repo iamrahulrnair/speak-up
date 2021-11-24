@@ -11,6 +11,7 @@ import { Review } from '../../models/review';
 export class ReviewUpdatedListener extends Listener<ReviewUpdatedEvent> {
   readonly subject: Subjects.reviewUpdated = Subjects.reviewUpdated;
   queueGroupName = queueGroupName;
+
   async onMessage(data: ReviewUpdatedEvent['data'], msg: Message) {
     const { id, title, description, rating, version } = data;
     const review = await Review.findByEvent({ id, version });

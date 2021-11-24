@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { validateRequest } from '@suup/common';
+import { requireAuth, validateRequest, requireAdminAccess } from '@suup/common';
 
 import { Post } from '../models/post';
 import { POST_URL } from '../common/variable';
@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.post(
   POST_URL,
+  requireAuth,
+  requireAdminAccess,
   [
     body('userId')
       .notEmpty()

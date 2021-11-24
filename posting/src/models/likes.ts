@@ -1,4 +1,3 @@
-import { NotFoundError } from '@suup/common';
 import mongoose, { Schema } from 'mongoose';
 import { Review } from './review';
 

@@ -1,4 +1,9 @@
-import { NotFoundError, validateRequest } from '@suup/common';
+import {
+  NotFoundError,
+  requireAdminAccess,
+  requireAuth,
+  validateRequest,
+} from '@suup/common';
 import express, { Request, Response } from 'express';
 import { POST_URL } from '../common/variable';
 import { param } from 'express-validator';
@@ -13,6 +18,7 @@ const router = express.Router();
 
 router.get(
   `${POST_URL}/:postId`,
+  requireAuth,
   param('postId')
     .custom((value) => {
       return mongoose.Types.ObjectId.isValid(value);
