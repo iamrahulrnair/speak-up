@@ -102,7 +102,7 @@ reviewSchema.statics.calcAverageRating = async function (postId) {
   if (!post) throw new NotFoundError();
   post.set({
     ratingsAverage: stats[0] ? stats[0].avgRating : 4.5,
-    totalRating: stats[0] ? stats[0].count : 0,
+    ratingsCount: stats[0] ? stats[0].count : 0,
   });
   await post.save();
 };
