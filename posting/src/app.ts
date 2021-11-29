@@ -29,6 +29,7 @@ app.use(getPostRouter);
 app.use(updatePostRouter);
 app.use(deletePostRouter);
 app.use(createPostRouter);
+
 app.use(likeRouter);
 
 app.all('*', () => {
