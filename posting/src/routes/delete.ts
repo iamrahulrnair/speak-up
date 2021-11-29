@@ -21,7 +21,7 @@ const router = express.Router();
 router.delete(
   `${POST_URL}/:postId`,
   requireAuth,
-  requireAdminAccess,
+  // requireAdminAccess,
   param('postId').custom((value) => {
     return mongoose.Types.ObjectId.isValid(value);
   }),

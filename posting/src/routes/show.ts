@@ -25,6 +25,7 @@ router.get(
     })
     .withMessage('invalid id'),
   validateRequest,
+  requireAuth,
   async (req: Request, res: Response) => {
     const { postId } = req.params;
     const post = await Post.findById(postId).populate('reviewId');

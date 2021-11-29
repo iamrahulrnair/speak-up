@@ -2,7 +2,12 @@ import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
 import mongoose from 'mongoose';
 
-import { validateRequest, NotFoundError, requireAuth, requireAdminAccess } from '@suup/common';
+import {
+  validateRequest,
+  NotFoundError,
+  requireAuth,
+  requireAdminAccess,
+} from '@suup/common';
 import { POST_URL } from '../common/variable';
 import { Post } from '../models/post';
 
@@ -12,7 +17,7 @@ const router = express.Router();
 
 router.patch(
   `${POST_URL}/:postId`,
-  requireAuth,requireAdminAccess,
+  requireAuth, //requireAdminAccess,
   param('postId')
     .custom((value) => {
       return mongoose.Types.ObjectId.isValid(value);
@@ -24,11 +29,12 @@ router.patch(
     const post = await Post.findById(postId);
 
     if (!post) throw new NotFoundError();
-    const { companyName, initialRating, imageurl } = req.body;
+    const { companyName, ratingsAverage, imageUrl, ratingsCount } = req.body;
 
     if (companyName) post.set({ companyName });
-    if (initialRating) post.set({ initialRating });
-    if (imageurl) post.set({ imageurl });
+    if (ratingsAverage) post.set({ ratingsAverage });
+    if (imageUrl) post.set({ imageurl: imageUrl });
+    if (ratingsCount) post.set({ ratingsCount });
     await post.save();
     res.send(post);
   }

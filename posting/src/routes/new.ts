@@ -13,29 +13,21 @@ const router = express.Router();
 router.post(
   POST_URL,
   requireAuth,
-  requireAdminAccess,
+  // requireAdminAccess,
   [
-    body('userId')
-      .notEmpty()
-      .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
-      .withMessage('userid is invalid'),
     body('companyName').notEmpty().isString().withMessage('invalid input'),
-    body('initialRating')
-      .notEmpty()
-      .isInt({ gt: 0, lt: 6 })
-      .withMessage('invalid rating'),
     body('imageUrl').notEmpty().isString().withMessage('invalid image url'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { userId, companyName, initialRating, imageurl } = req.body;
+    const { companyName, imageUrl } = req.body;
     const post = Post.build({
-      userId,
+      userId: req.currentUser!.id,
       companyName,
-      imageurl,
+      imageurl: imageUrl,
     });
     await post.save();
-    res.send(201).send(post);
+    res.status(201).send(post);
   }
 );
 export { router as createPostRouter };

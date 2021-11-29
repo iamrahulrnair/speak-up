@@ -6,7 +6,7 @@ import { requireAuth } from '@suup/common';
 
 const router = express.Router();
 
-// @TODO: requireAuth and permisson limited to 3 pps
+// @TODO: requireAuth and permisson limited to 3 pps requireAuth
 
 router.get(POST_URL, requireAuth, async (req: Request, res: Response) => {
   const posts = await Post.find().select('-reviews');
