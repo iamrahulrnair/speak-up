@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posting-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posting-mongo
+  template:
+    metadata:
+      labels:
+        app: posting-mongo
+    spec:
+      containers:
+        - name: posting-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posting-mongo-srv
+spec:
+  selector:
+    app: posting-mongo
+  type: ClusterIP
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

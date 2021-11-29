@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: speakup.com
+      http:
+        paths:
+          - path: /api/_p/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: posting-srv
+                port:
+                  number: 3000
+          - path: /api/_l/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: posting-srv
+                port:
+                  number: 3000
+          - path: /api/_r/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: review-srv
+                port:
+                  number: 3000
+          - path: /api/_a/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - path: /api/users/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000
