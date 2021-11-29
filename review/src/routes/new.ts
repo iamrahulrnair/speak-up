@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { requireAuth, validateRequest } from '@suup/common';
+import { BadRequestError, requireAuth, validateRequest } from '@suup/common';
 
 import { Review } from '../models/review';
 import { REVIEW_URL } from '../common/variable';
@@ -16,10 +16,6 @@ router.post(
   REVIEW_URL,
   requireAuth,
   [
-    body('userId')
-      .notEmpty()
-      .custom((val) => mongoose.Types.ObjectId.isValid(val))
-      .withMessage('invalid id'),
     body('postId')
       .notEmpty()
       .custom((val) => mongoose.Types.ObjectId.isValid(val))
@@ -31,6 +27,13 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { postId, title, description, rating } = req.body;
+    const _check = await Review.exists({
+      userId: req.currentUser!.id,
+      postId,
+    });
+
+    if (_check) throw new BadRequestError('User comment exists with this post');
+
     const review = await Review.build({
       userId: req.currentUser!.id,
       postId,
