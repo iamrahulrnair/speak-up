@@ -21,7 +21,7 @@ const likeSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       required: true,
     },
-    review: {
+    reviewId: {
       type: mongoose.Types.ObjectId,
       required: true,
       ref: 'Review',
