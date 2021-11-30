@@ -15,6 +15,8 @@ export class ReviewCreatedListener extends Listener<ReviewCreatedEvent> {
   async onMessage(data: ReviewCreatedEvent['data'], msg: Message) {
     try {
       const { id, userId, postId, title, description, rating } = data;
+      const _check = await Post.exists({ _id: postId });
+      if (!_check) throw new BadRequestError('Cannot review anonymous posts');
       const review = await Review.build({
         id,
         userId,
