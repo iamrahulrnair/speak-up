@@ -13,21 +13,19 @@ router.post(
   LIKE_URL,
   requireAuth,
   [
-    body('userId')
-      .notEmpty()
-      .custom((val) => mongoose.Types.ObjectId.isValid(val))
-      .withMessage('invalid id'),
-    body('postId')
+    body('reviewId')
       .notEmpty()
       .custom((val) => mongoose.Types.ObjectId.isValid(val))
       .withMessage('invalid id'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { userId, reviewId } = req.body;
-    const review = await Review.findById(reviewId);
-    if (!review) throw new NotFoundError();
+    const { reviewId } = req.body;
+    const userId = req.currentUser!.id;
+    const _check = await Review.exists({ reviewId });
 
+    if (!_check) throw new NotFoundError();
+    const review = await Review.findOne({ reviewId, userId });
     /*
        Checks the document exists in the document,
        if yes deletes that and decreases the total count
@@ -43,16 +41,16 @@ router.post(
         userId,
         reviewId,
       });
-      review.set({ likes: review.likes-- });
-      await review.save();
+      await Review!.updateOne({ likes: --review!.likes });
+      res.send(review);
     } else {
       const like = await Like.build({
         userId,
         reviewId,
       });
       await like.save();
-      review.set({ likes: review.likes++ });
-      await review.save();
+      await Review!.updateOne({ likes: ++review!.likes });
+      res.send(review);
     }
   }
 );
