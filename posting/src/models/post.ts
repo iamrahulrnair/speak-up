@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 //user id is one among the 3 admins,only they can post new companies
 // use enum in userId
 
@@ -29,6 +29,7 @@ const PostSchema = new mongoose.Schema(
     companyName: {
       type: String,
       required: true,
+      unique: true,
     },
     imageurl: {
       type: String,
@@ -55,6 +56,8 @@ const PostSchema = new mongoose.Schema(
     },
   }
 );
+PostSchema.set('versionKey', 'version');
+PostSchema.plugin(updateIfCurrentPlugin);
 
 PostSchema.virtual('reviews', {
   ref: 'Review',

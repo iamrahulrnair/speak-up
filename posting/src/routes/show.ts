@@ -28,7 +28,7 @@ router.get(
   requireAuth,
   async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate('reviewId');
+    const post = await Post.findById(postId);
     const reviews = await Review.find({ postId });
     if (!post) throw new NotFoundError();
     res.send({

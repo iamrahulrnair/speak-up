@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { body } from 'express-validator';
 import { requireAuth, validateRequest, requireAdminAccess } from '@suup/common';
+import { PostCreatedEventPublisher } from '../events/publishers/post-created-publisher';
 
 import { Post } from '../models/post';
 import { POST_URL } from '../common/variable';
+import { natsWrapper } from '../nats-wrapper';
 
 // @TODO: use enum to check 1 of three userIds
 
@@ -27,6 +28,11 @@ router.post(
       imageurl: imageUrl,
     });
     await post.save();
+
+    new PostCreatedEventPublisher(natsWrapper.client).publish({
+      id: post.id,
+    });
+
     res.status(201).send(post);
   }
 );
