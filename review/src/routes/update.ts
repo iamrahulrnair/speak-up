@@ -11,9 +11,10 @@ import { natsWrapper } from '../nats-wrapper';
 const router = express.Router();
 
 router.patch(
-  `${REVIEW_URL}/:reviewId`,requireAuth,
+  `${REVIEW_URL}/:reviewId`,
+  requireAuth,
   [
-    param('id')
+    param('reviewId')
       .custom((value) => {
         return mongoose.Types.ObjectId.isValid(value);
       })

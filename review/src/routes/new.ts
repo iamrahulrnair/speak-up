@@ -7,6 +7,7 @@ import { Review } from '../models/review';
 import { REVIEW_URL } from '../common/variable';
 import { ReviewCreatedPublisher } from '../events/publishers/review-created-publisher';
 import { natsWrapper } from '../nats-wrapper';
+import { Post } from '../models/post';
 
 const router = express.Router();
 
@@ -31,8 +32,13 @@ router.post(
       userId: req.currentUser!.id,
       postId,
     });
+    const _check_post = await Post.exists({
+      _id: postId,
+    });
 
     if (_check) throw new BadRequestError('User comment exists with this post');
+    if (!_check_post)
+      throw new BadRequestError('cannot create anonymous review');
 
     const review = await Review.build({
       userId: req.currentUser!.id,

@@ -11,5 +11,6 @@ export class PostDeletedListener extends Listener<PostDeletedEvent> {
     await Review.deleteMany({
       id,
     });
+    msg.ack();
   }
 }

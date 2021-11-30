@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { PostDeletedListener } from './events/listeners/post-deleted-listener';
+import { PostCreatedListener } from './events/listeners/post-created-listener';
 import { natsWrapper } from './nats-wrapper';
 
 const startInstance = async () => {
@@ -26,11 +27,12 @@ const startInstance = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     new PostDeletedListener(natsWrapper.client).listen();
+    new PostCreatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('connected to database');
   } catch (err) {
-    console.log(err);
+    console.log('err:from here:', err);
   }
   app.listen(3000, () => {
     console.log('listening on port 3000');
