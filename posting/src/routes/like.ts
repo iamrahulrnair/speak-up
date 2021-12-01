@@ -1,7 +1,12 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { NotFoundError, requireAuth, validateRequest } from '@suup/common';
+import {
+  BadRequestError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from '@suup/common';
 
 import { Review } from '../models/review';
 import { LIKE_URL } from '../common/variable';
@@ -25,7 +30,10 @@ router.post(
     const _check = await Review.exists({ reviewId });
 
     if (!_check) throw new NotFoundError();
-    const review = await Review.findOne({ reviewId, userId });
+    const review = await Review.findOne({ _id: reviewId });
+
+    if (review?.userId == req.currentUser?.id)
+      throw new BadRequestError('You cannot like your own review');
     /*
        Checks the document exists in the document,
        if yes deletes that and decreases the total count
@@ -41,7 +49,7 @@ router.post(
         userId,
         reviewId,
       });
-      await Review!.updateOne({ likes: --review!.likes });
+      await Review!.updateOne({ _id: reviewId }, { likes: --review!.likes });
       res.send(review);
     } else {
       const like = await Like.build({
@@ -49,7 +57,7 @@ router.post(
         reviewId,
       });
       await like.save();
-      await Review!.updateOne({ likes: ++review!.likes });
+      await Review!.updateOne({ _id: reviewId }, { likes: ++review!.likes });
       res.send(review);
     }
   }
