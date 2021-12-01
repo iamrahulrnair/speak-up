@@ -30,13 +30,18 @@ router.patch(
 
     if (!post) throw new NotFoundError();
     const { companyName, ratingsAverage, imageUrl, ratingsCount } = req.body;
-
-    if (companyName) post.set({ companyName });
-    if (ratingsAverage) post.set({ ratingsAverage });
-    if (imageUrl) post.set({ imageurl: imageUrl });
-    if (ratingsCount) post.set({ ratingsCount });
-    await post.save();
-    res.send(post);
+    /**
+     * not using set as it causes the updateifplugin to trigger ,
+     * which causes version mismatch,
+     * updateOne doesnt causes pre save hooks to exectue.
+     */
+    if (companyName) await Post.updateOne({ _id: postId }, { companyName });
+    if (ratingsAverage)
+      await Post.updateOne({ _id: postId }, { ratingsAverage });
+    if (imageUrl) await Post.updateOne({ _id: postId }, { imageUrl });
+    if (ratingsCount) await Post.updateOne({ _id: postId }, { ratingsCount });
+    const _post = await Post.findById(postId);
+    res.send(_post);
   }
 );
 export { router as updatePostRouter };
