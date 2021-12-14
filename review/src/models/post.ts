@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import mongoose from "mongoose";
 
 interface PostAttrs {
   id: string;
@@ -9,7 +8,6 @@ interface PostDoc extends mongoose.Document {
 }
 interface PostModel extends mongoose.Model<PostDoc> {
   build(attrs: PostAttrs): PostDoc;
-  findByEvent(event: { id: string; version: number }): Promise<PostDoc | null>;
 }
 
 const PostSchema = new mongoose.Schema(
@@ -23,8 +21,6 @@ const PostSchema = new mongoose.Schema(
     },
   }
 );
-PostSchema.set('versionKey', 'version');
-PostSchema.plugin(updateIfCurrentPlugin);
 
 PostSchema.statics.build = (attrs: PostAttrs) => {
   return new Post({
@@ -32,12 +28,5 @@ PostSchema.statics.build = (attrs: PostAttrs) => {
   });
 };
 
-PostSchema.statics.findByEvent = (event: { id: string; version: number }) => {
-  return Post.findOne({
-    _id: event.id,
-    version: event.version - 1,
-  });
-};
-
-const Post = mongoose.model<PostDoc, PostModel>('Post', PostSchema);
+const Post = mongoose.model<PostDoc, PostModel>("Post", PostSchema);
 export { Post };
