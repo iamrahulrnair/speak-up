@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface ReviewAttrs {
   userId: string;
@@ -54,12 +54,12 @@ const reviewSchema = new mongoose.Schema(
     },
   }
 );
-reviewSchema.set('versionKey', 'version');
+reviewSchema.set("versionKey", "version");
 reviewSchema.plugin(updateIfCurrentPlugin);
 
 reviewSchema.statics.build = (attrs: ReviewAttrs): ReviewDocs => {
   return new Review(attrs);
 };
 
-const Review = mongoose.model<ReviewDocs, ReviewModel>('Review', reviewSchema);
+const Review = mongoose.model<ReviewDocs, ReviewModel>("Review", reviewSchema);
 export { Review };

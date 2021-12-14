@@ -1,18 +1,23 @@
-import { NotFoundError, validateRequest, requireAuth } from '@suup/common';
-import mongoose from 'mongoose';
-import express, { Request, Response } from 'express';
-import { param } from 'express-validator';
+import {
+  NotFoundError,
+  validateRequest,
+  requireAuth,
+  BadRequestError,
+} from "@suup/common";
+import mongoose from "mongoose";
+import express, { Request, Response } from "express";
+import { param } from "express-validator";
 
-import { REVIEW_URL } from '../common/variable';
-import { Review } from '../models/review';
-import { ReviewDeletedPublisher } from '../events/publishers/review-deleted-publisher';
-import { natsWrapper } from '../nats-wrapper';
+import { REVIEW_URL } from "../common/variable";
+import { Review } from "../models/review";
+import { ReviewDeletedPublisher } from "../events/publishers/review-deleted-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
 router.delete(
   `${REVIEW_URL}/:reviewId`,
-  param('reviewId').custom((value) => {
+  param("reviewId").custom((value) => {
     return mongoose.Types.ObjectId.isValid(value);
   }),
   validateRequest,
@@ -24,7 +29,7 @@ router.delete(
         userId: req.currentUser!.id,
       });
       //   @TODO: event publisher
-      if (!review) throw new NotFoundError();
+      if (!review) throw new BadRequestError("Not your comment");
 
       new ReviewDeletedPublisher(natsWrapper.client).publish({
         id: review.id,
