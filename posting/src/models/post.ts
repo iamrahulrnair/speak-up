@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import mongoose from "mongoose";
 //user id is one among the 3 admins,only they can post new companies
 // use enum in userId
 
@@ -56,13 +55,11 @@ const PostSchema = new mongoose.Schema(
     },
   }
 );
-PostSchema.set('versionKey', 'version');
-PostSchema.plugin(updateIfCurrentPlugin);
 
-PostSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'postId',
-  localField: '_id',
+PostSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "postId",
+  localField: "_id",
 });
 
 PostSchema.statics.build = (attrs: PostAttrs) => {
@@ -70,10 +67,10 @@ PostSchema.statics.build = (attrs: PostAttrs) => {
 };
 
 PostSchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  this.select('-userId');
+  this.select("-__v");
+  this.select("-userId");
   next();
 });
 
-const Post = mongoose.model<PostDoc, PostModel>('Post', PostSchema);
+const Post = mongoose.model<PostDoc, PostModel>("Post", PostSchema);
 export { Post };
