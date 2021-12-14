@@ -63,3 +63,4 @@ reviewSchema.statics.build = (attrs: ReviewAttrs): ReviewDocs => {
 
 const Review = mongoose.model<ReviewDocs, ReviewModel>("Review", reviewSchema);
 export { Review };
+// @TODO:check update review event publisher
