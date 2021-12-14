@@ -1,8 +1,8 @@
-import { NotFoundError } from '@suup/common';
-import mongoose from 'mongoose';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { NotFoundError } from "@suup/common";
+import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
-import { Post } from './post';
+import { Post } from "./post";
 
 // @TODO: user can post only one review per post
 // @TODO: likes should be associated with review service becuase they are coupled tpogether, use virtual to populate likes in review and
@@ -62,8 +62,8 @@ const reviewSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
+      enum: ["active", "inactive"],
+      default: "active",
     },
     likes: {
       type: Number,
@@ -80,7 +80,7 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.set('versionKey', 'version');
+reviewSchema.set("versionKey", "version");
 reviewSchema.plugin(updateIfCurrentPlugin);
 
 // occ for consistency
@@ -91,9 +91,9 @@ reviewSchema.statics.calcAverageRating = async function (postId) {
     },
     {
       $group: {
-        _id: '$postId',
+        _id: postId,
         count: { $sum: 1 },
-        avgRating: { $avg: '$rating' },
+        avgRating: { $avg: "$rating" },
       },
     },
   ]);
@@ -124,9 +124,12 @@ reviewSchema.statics.findByEvent = (event: { id: string; version: number }) => {
     version: event.version - 1,
   });
 };
-
-reviewSchema.post('save', async function (doc) {
-  await this.constructor.calcAverageRating(doc.postId);
+reviewSchema.post("findOneAndDelete", async function (doc) {
+  await Review.calcAverageRating(doc.postId);
 });
-const Review = mongoose.model<ReviewDocs, ReviewModel>('Review', reviewSchema);
+reviewSchema.post("save", async function (doc) {
+  await Review.calcAverageRating(doc.postId);
+});
+
+const Review = mongoose.model<ReviewDocs, ReviewModel>("Review", reviewSchema);
 export { Review };
