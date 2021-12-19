@@ -2,7 +2,8 @@ import express, { Request, Response } from 'express';
 
 import { Post } from '../models/post';
 import { POST_URL } from '../common/variable';
-import { requireAuth, requireAdminAccess } from '@suup/common';
+import { requireAuth } from '@suup/common';
+import { requireAdminAccess } from '@suup/commonv2';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const router = express.Router();
 
 router.get(
   POST_URL,
+  requireAuth,
   requireAdminAccess,
   async (req: Request, res: Response) => {
     const posts = await Post.find().sort({ createdAt: 1 });

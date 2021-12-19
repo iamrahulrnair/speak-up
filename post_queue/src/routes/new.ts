@@ -1,6 +1,11 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { requireAuth, validateRequest, requireAdminAccess } from '@suup/common';
+import {
+  requireAuth,
+  validateRequest,
+  requireAdminAccess,
+  BadRequestError,
+} from '@suup/common';
 
 import { Post } from '../models/post';
 import { POST_URL } from '../common/variable';
@@ -19,7 +24,12 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { companyName, imageUrl } = req.body;
+    const companyName = req.body.companyName.toLowerCase();
+    const { imageUrl } = req.body;
+
+    const _check = await Post.exists({ companyName });
+    if (_check) throw new BadRequestError('Company Exists');
+
     const post = Post.build({
       userId: req.currentUser!.id,
       companyName,
