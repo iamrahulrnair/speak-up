@@ -32,3 +32,19 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: iamrahulrnair/speakup-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: iamrahulrnair/post_queue
+      context: post_queue
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
