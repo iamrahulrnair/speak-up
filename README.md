@@ -6,3 +6,29 @@ This will be the backend services for **speakUP** . An Application which provide
  - [ ] Interested to work together with me, go through the code, find a bug / bad code / any optimization, [Raise an issue](https://github.com/iamrahulrnair/speak-up/issues)
 
 > speakUP is still a **work** in progress 🙂
+
+Read More about,
+> [Authentication service](https://github.com/iamrahulrnair/speak-up/tree/main/auth)
+> 
+> [Post Queue Service for admins](https://github.com/iamrahulrnair/speak-up/tree/main/post_queue)
+> 
+> [Posts Service](https://github.com/iamrahulrnair/speak-up/tree/main/posting)
+>
+> [Review Service](https://github.com/iamrahulrnair/speak-up/tree/main/review)
+
+### Local setup:-
+
+To Run this api services locally, make sure:
+1. Docker is installed
+2. The pods must be managed via kubernetes
+3. install skaffold for managing kubernetes cluster more easily.
+4. **cd /speak-up && skaffold dev**
+5. Make sure the relvant ENV variables are configured properly eg: JWT_KEY in all deployment configurations, eg:
+
+> kubectl create secret generics jwt-secret --from-literal=JWT_KEY=YOURSECRET.com 
+
+<hr>
+
+<div align="center">
+ Check out<a href="https://github.com/iamrahulrnair/speak-up_client"> speakUP client </a> here
+</div>
