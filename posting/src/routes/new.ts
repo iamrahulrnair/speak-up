@@ -23,16 +23,21 @@ router.post(
   [
     body('companyName').notEmpty().isString().withMessage('invalid input'),
     body('imageUrl').notEmpty().isString().withMessage('invalid image url'),
+    body('description')
+      .notEmpty()
+      .isString()
+      .withMessage('invalid description'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { companyName, imageUrl } = req.body;
+    const { companyName, imageUrl, description } = req.body;
     const _check = await Post.exists({ companyName });
     if (_check) throw new BadRequestError('Company Exists');
     const post = Post.build({
       userId: req.currentUser!.id,
       companyName,
       imageurl: imageUrl,
+      description,
     });
     await post.save();
 
