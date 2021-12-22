@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 //user id is one among the 3 admins,only they can post new companies
 // use enum in userId
 
@@ -8,6 +8,7 @@ interface PostAttrs {
   ratingsAverage?: number;
   ratingsCount?: number;
   imageurl: string;
+  description: string;
 }
 interface PostDoc extends mongoose.Document {
   userId: string;
@@ -15,6 +16,7 @@ interface PostDoc extends mongoose.Document {
   ratingsAverage: number;
   ratingsCount: number;
   imageurl: string;
+  description: string;
 }
 interface PostModel extends mongoose.Model<PostDoc> {
   build(attrs: PostAttrs): PostDoc;
@@ -31,6 +33,10 @@ const PostSchema = new mongoose.Schema(
       unique: true,
     },
     imageurl: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },
@@ -56,10 +62,10 @@ const PostSchema = new mongoose.Schema(
   }
 );
 
-PostSchema.virtual("reviews", {
-  ref: "Review",
-  foreignField: "postId",
-  localField: "_id",
+PostSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'postId',
+  localField: '_id',
 });
 
 PostSchema.statics.build = (attrs: PostAttrs) => {
@@ -67,10 +73,10 @@ PostSchema.statics.build = (attrs: PostAttrs) => {
 };
 
 PostSchema.pre(/^find/, function (next) {
-  this.select("-__v");
-  this.select("-userId");
+  this.select('-__v');
+  this.select('-userId');
   next();
 });
 
-const Post = mongoose.model<PostDoc, PostModel>("Post", PostSchema);
+const Post = mongoose.model<PostDoc, PostModel>('Post', PostSchema);
 export { Post };
