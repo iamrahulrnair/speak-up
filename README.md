@@ -22,8 +22,9 @@ To Run this api services locally, make sure:
 1. Docker is installed
 2. The pods must be managed via kubernetes
 3. install skaffold for managing kubernetes cluster more easily.
-4. **cd /speak-up && skaffold dev**
-5. Make sure the relvant ENV variables are configured properly eg: JWT_KEY in all deployment configurations, eg:
+4. Include a directory with name as **client** and clone [speakUP client](https://github.com/iamrahulrnair/speak-up_client)
+5. **cd /speak-up && skaffold dev**
+6. Make sure the relvant ENV variables are configured properly eg: JWT_KEY in all deployment configurations, eg:
 
 > kubectl create secret generics jwt-secret --from-literal=JWT_KEY=YOURSECRET.com 
 
