@@ -1,4 +1,4 @@
-## speakUP
+# <p align='center'>**speakUP**<p/>
 
 This will be the backend services for **speakUP** . An Application which provides a platform for users to speakup against an organization.This backend for speakUP is backed by currently 3 services ( which i am planning to add 2 more services ). The authenticity of Reviews posted will be determined by an upvote downvote system similar to **Stackoverflow's**. This application addresses  data consistency with optimistic concurreny control and interservice events is handled with  [nats-straming-server](https://github.com/nats-io/nats-streaming-server). 
 
